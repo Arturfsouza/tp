@@ -41,6 +41,51 @@ string removerEspacoExtra(string input) {
   return result;
 }
 
+string arquivoEmString(string caminhoDocumento) {
+  ifstream file(caminhoDocumento); // Abre o arquivo usando o caminho completo
+  if (file.is_open()) { // Verifica se o arquivo foi aberto com sucesso
+    std::string content((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
+    // Lê o conteúdo do arquivo e armazena em uma string
+
+    file.close(); // Fecha o arquivo
+
+    return content;
+  } else {
+    std::cout << "Erro ao abrir o arquivo." << std::endl;
+    return ""; // Retorna uma string vazia em caso de erro
+  }
+}
+
+void lerDocumentosDaPasta(string caminhoDocumento,
+                                  vector<string>& conteudosDosDocumentos) {
+  DIR *dir = opendir(caminhoDocumento.c_str());
+  if (dir == nullptr) {
+    std::cerr << "Erro ao abrir o diretório." << std::endl;
+    return;
+  }
+
+  dirent *entry;
+
+  while ((entry = readdir(dir)) != nullptr) {
+    if (entry->d_type == DT_REG) { // Verifica se é um arquivo regular
+      std::string fileName = entry->d_name;
+      std::string filePath = caminhoDocumento + "/" + fileName;
+      std::cout << "Lendo o arquivo: " << filePath << std::endl;
+
+      std::string conteudoDoArquivo =
+          arquivoEmString(filePath); // Chama a função arquivoEmString() para
+                                     // obter o conteúdo do arquivo
+      std::string conteudoSemEspacoExtra = removerEspacoExtra(
+          conteudoDoArquivo); // Remove espaços extras do conteúdo do arquivo
+      conteudosDosDocumentos.push_back(
+          conteudoSemEspacoExtra); // Armazena o conteúdo no vetor
+    }
+  }
+
+  closedir(dir);
+}
+
 vector<string> obterPalavras(string frase) {
   vector<string> palavras;
 
