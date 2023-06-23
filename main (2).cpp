@@ -98,7 +98,22 @@ vector<string> obterPalavras(string frase) {
 
   return palavras;
 }
+void construirIndiceInvertido(
+    const vector<string>& conteudosDosDocumentos,
+    map<string, map<string, int>>& indiceInvertido) {
+  for (int i = 0; i < conteudosDosDocumentos.size(); i++) {
+    string conteudo = conteudosDosDocumentos[i];
+    vector<string> palavras = obterPalavras(conteudo);
 
+    set<string> palavrasUnicas(palavras.begin(), palavras.end());
+
+    for (const string& palavra : palavrasUnicas) {
+      string palavraNormalizada = normalizar(palavra);
+
+      indiceInvertido[palavraNormalizada][to_string(i)]++;
+    }
+  }
+}
 int main() {
   vector<string> words; // Vetor para armazenar as palavras
 
