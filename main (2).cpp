@@ -7,33 +7,21 @@
 #include <string>
 #include <vector>
 using namespace std;
-// Função para normalizar uma palavra
-string normalizar(string palavra) {
-  string palavraNormalizada;
+// Função para normalizar uma palavra, removendo pontuações e convertendo para
+// letras minúsculas
+string normalizeWord(const string &word) {
+  string normalizedWord = word;
 
-  // Percorre cada caractere da palavra
-  for (char c : palavra) {
-    // Verifica se o caractere é uma letra e converte para minúsculo
-    if (isalpha(c)) {
-      palavraNormalizada += tolower(c);
-    }
-  }
+  // Remover pontuações
+  normalizedWord.erase(remove_if(normalizedWord.begin(),normalizedWord.end(),[](char c)
+    { return ispunct(c); }),normalizedWord.end());
 
-  return palavraNormalizada;
+  // Converter para letras minúsculas
+  transform(normalizedWord.begin(), normalizedWord.end(), normalizedWord.begin(), [](char c) {   return tolower(c); });
+
+  return normalizedWord;
 }
 
-vector<string> obterPalavras(string frase) {
-  vector<string> palavras;
-
-  istringstream iss(frase);
-  string palavra;
-
-  while (iss >> palavra) {
-    palavras.push_back(palavra);
-  }
-
-  return palavras;
-}
 int main() {
   vector<string> words; // Vetor para armazenar as palavras
 
@@ -42,32 +30,42 @@ int main() {
   string input;
   while (true) {
     cin >> input;
-    string normalizar(const string &input);
+    string normalizeWord(const string &input);
     if (input == "fim") {
       break;
+    n = n+1;
     }
 
     words.push_back(input); // Adiciona a palavra ao vetor
   }
-
+  
   string filename = "bak.txt"; // Nome do arquivo de texto
   ifstream file(filename);     // Abre o arquivo
 
   if (file.is_open()) { // Verifica se o arquivo foi aberto com sucesso
     string content((istreambuf_iterator<char>(file)),
-                   istreambuf_iterator<char>());
-    string normalizar(const string &content);
-    vector<string> palavras = obterPalavras(content);
-    int v = palavras.size();
-    int n = words.size();
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; i < v; j++) {
-        if (words[i] == palavras[j]) {
-          int cont = cont + 1;
-          cout << words[i] << " " << cont << endl;
-        }
-      }
+                        istreambuf_iterator<char>());
+    file.close(); // Fecha o arquivo
+
+    // Criar um stringstream para separar as palavras
+    stringstream ss(content);
+    string word;
+    map<string, int> wordCountMap;
+
+    // Processar cada palavra
+    while (ss >> word) {
+      // Normalizar a palavra
+      string normalizedWord = normalizeWord(word);
+
+      // Incrementar o contador de palavras
+      wordCountMap[normalizedWord]++;
     }
-    return 0;
+
+    // Imprimir o resultado
+    for (int i=0; i < n;i++ ){
+      for (const auto &pair : wordCountMap) {
+        if (words[i] == pair.first){ 
+          cout << pair.first <<" "<< pair.second << filename << endl;}}}
+  return 0;
   }
 }
