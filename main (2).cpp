@@ -6,20 +6,31 @@
 #include <sstream>
 #include <string>
 #include <vector>
-using namespace std;
-// Função para normalizar uma palavra, removendo pontuações e convertendo para
-// letras minúsculas
-string normalizeWord(const string &word) {
-  string normalizedWord = word;
+string normalizar(string frase) {
+  string palavraNormalizada;
 
-  // Remover pontuações
-  normalizedWord.erase(remove_if(normalizedWord.begin(),normalizedWord.end(),[](char c)
-    { return ispunct(c); }),normalizedWord.end());
+  // Percorre cada caractere da palavra
+  for (char c : frase) {
+    // Verifica se o caractere é uma letra e converte para minúsculo
+    if (isalpha(c)) {
+      palavraNormalizada += tolower(c);
+    }
+  }
 
-  // Converter para letras minúsculas
-  transform(normalizedWord.begin(), normalizedWord.end(), normalizedWord.begin(), [](char c) {   return tolower(c); });
+  return palavraNormalizada;
+}
 
-  return normalizedWord;
+vector<string> obterPalavras(string frase) {
+  vector<string> palavras;
+
+  istringstream iss(frase);
+  string palavra;
+
+  while (iss >> palavra) {
+    palavras.push_back(palavra);
+  }
+
+  return palavras;
 }
 
 int main() {
