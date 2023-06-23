@@ -19,6 +19,27 @@ string normalizar(string frase) {
 
   return palavraNormalizada;
 }
+string removerEspacoExtra(string input) {
+  string result;
+  bool previousWasSpace = false;
+
+  for (char c : input) {
+    if (c == '\n' || c == '\r') {
+      result += ' ';
+      previousWasSpace = true;
+    } else if (isspace(c)) {
+      if (!previousWasSpace) {
+        result += ' ';
+        previousWasSpace = true;
+      }
+    } else if (isalnum(c) || c == ' ') {
+      result += c;
+      previousWasSpace = false;
+    }
+  }
+
+  return result;
+}
 
 vector<string> obterPalavras(string frase) {
   vector<string> palavras;
